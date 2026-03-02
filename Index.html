@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>My Favorite Books</title>
+</head>
+<body>
+
+  <h1>My Favorite Books</h1>
+
+  <table border="1">
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>Author</th>
+        <th>ISBN</th>
+      </tr>
+    </thead>
+    <tbody id="books-table-body">
+    </tbody>
+  </table>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <script>
+    const supabaseUrl = "https://ykoubzpaxdxwfpsqplem.supabase.co";
+    const supabaseKey = "sb_publishable_EYepm1HfaFStITR31gqo_w_d6A9_pgG";
+
+    const { createClient } = supabase;
+    const client = createClient(supabaseUrl, supabaseKey);
+
+    async function fetchBooks() {
+      const { data, error } = await client
+        .from('books')
+        .select('*');
+
+      if (error) {
+        console.error('Error fetching books:', error);
+        return;
+      }
+
+      const tableBody = document.getElementById('books-table-body');
+
+      data.forEach(book => {
+        const row = document.createElement('tr');
+
+        row.innerHTML = `
+          <td>${book.Title}</td>
+          <td>${book.Author}</td>
+          <td>${book.ISBN}</td>
+        `;
+
+        tableBody.appendChild(row);
+      });
+    }
+
+    fetchBooks();
+  </script>
+
+</body>
+</html>
